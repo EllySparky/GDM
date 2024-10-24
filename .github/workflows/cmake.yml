@@ -46,6 +46,8 @@ jobs:
         run: |
           coverage=$(gcovr -r . --exclude-unreachable-branches --filter='lib/' | grep 'TOTAL' | awk '{print $NF}' | sed 's/%//')
           echo "coverage=${coverage}" >> $GITHUB_ENV
+          echo "coverage=${coverage}"
+          echo "${{ env.coverage }}"
 
       - name: Set badge color based on coverage
         id: set_color
