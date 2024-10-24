@@ -1,14 +1,14 @@
-<svg width="126.4" height="20" viewBox="0 0 1264 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Coverage develop: 8">
-  <title>Coverage develop: 8</title>
+<svg width="133.4" height="20" viewBox="0 0 1334 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Coverage develop: 88">
+  <title>Coverage develop: 88</title>
   <g>
     <rect fill="#2A2A2A" width="1094" height="200"/>
-    <rect fill="#E43" x="1094" width="170" height="200"/>
+    <rect fill="#3C1" x="1094" width="240" height="200"/>
   </g>
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
     <text x="60" y="148" textLength="994" fill="#000" opacity="0.1">Coverage develop</text>
     <text x="50" y="138" textLength="994">Coverage develop</text>
-    <text x="1149" y="148" textLength="70" fill="#000" opacity="0.1">8</text>
-    <text x="1139" y="138" textLength="70">8</text>
+    <text x="1149" y="148" textLength="140" fill="#000" opacity="0.1">88</text>
+    <text x="1139" y="138" textLength="140">88</text>
   </g>
   
 </svg>
