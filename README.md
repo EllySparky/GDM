@@ -1,6 +1,6 @@
-**Main branch**: ![Coverage on main](https://EllySparky.github.io/GDM/coverage/main.md)
+![Coverage on main](https://ellysparky.github.io/GDM/coverage/main.svg)
 
-**Develop branch**: ![Coverage on develop](https://tu-EllySparky.github.io/GDM/coverage/develop.md)
+![Coverage on develop](https://ellysparky.github.io/GDM/coverage/develop.svg)
 
 # Game Dev Mate
 
