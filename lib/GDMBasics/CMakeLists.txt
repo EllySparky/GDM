@@ -1,4 +1,3 @@
-find_package(SFML 2.5 COMPONENTS graphics audio window system)
 cmake_minimum_required(VERSION 3.25 FATAL_ERROR)
 project(
         GDMBasics
@@ -6,6 +5,18 @@ project(
         DESCRIPTION "2D Game development engine library"
         LANGUAGES CXX
 )
+
+include(FetchContent)
+
+# Descargar SFML usando FetchContent
+FetchContent_Declare(
+        SFML
+        GIT_REPOSITORY https://github.com/SFML/SFML.git
+        GIT_TAG 2.6.1  # Puedes cambiar esto a la versión que prefieras
+)
+
+# Hacer el fetch de SFML
+FetchContent_MakeAvailable(SFML)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
