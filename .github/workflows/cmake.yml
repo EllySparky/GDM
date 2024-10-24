@@ -6,6 +6,7 @@ on:
   pull_request:
     branches: [ "main", "develop" ]
 
+
 env:
   BUILD_TYPE: Release
 
@@ -60,6 +61,7 @@ jobs:
             echo "color=${color}" >> $GITHUB_ENV
 
       - name: Create Coverage Badge
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
         uses: emibcn/badge-action@v2.0.2
         with:
           label: Coverage ${{ github.ref == 'refs/heads/main' && 'main' || 'develop' }}
@@ -71,7 +73,9 @@ jobs:
         id: coverage_badge
 
       - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./docs/coverage/${{ github.ref == 'refs/heads/main' && 'main.svg' || 'develop.svg' }}
+          keep_files: true
