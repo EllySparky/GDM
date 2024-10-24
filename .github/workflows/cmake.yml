@@ -45,27 +45,27 @@ jobs:
         id: extract_coverage
         run: |
           coverage=$(gcovr -r . --exclude-unreachable-branches --filter='lib/' | grep 'TOTAL' | awk '{print $NF}' | sed 's/%//')
-          echo "::set-output name=coverage::${coverage%?}"
+          echo "coverage=${coverage}" >> $GITHUB_ENV
 
       - name: Set badge color based on coverage
         id: set_color
         run: |
-          if (( $(echo "${{ steps.extract_coverage.outputs.coverage }} < 50" | bc -l) )); then
+          if (( $(echo "${{ env.coverage }} < 50" | bc -l) )); then
             color="red"
-          elif (( $(echo "${{ steps.extract_coverage.outputs.coverage }} < 75" | bc -l) )); then
+          elif (( $(echo "${{ env.coverage }} < 75" | bc -l) )); then
             color="yellow"
           else
             color="green"
           fi
-          echo "::set-output name=color::${color}"
+            echo "color=${color}" >> $GITHUB_ENV
 
       - name: Create Coverage Badge
         uses: emibcn/badge-action@v2.0.2
         with:
           label: Coverage ${{ github.ref == 'refs/heads/main' && 'main' || 'develop' }}
           label-color: black
-          status: ${{ steps.extract_coverage.outputs.coverage }}
-          color: ${{ steps.set_color.outputs.color }}
+          status: ${{ env.coverage }}
+          color: ${{ env.color }}
           style: flat
           path: docs/coverage/${{ github.ref == 'refs/heads/main' && 'main.svg' || 'develop.svg' }}
         id: coverage_badge
