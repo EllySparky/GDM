@@ -63,17 +63,20 @@ jobs:
           format: markdown
           hide_branch_rate: false
           hide_complexity: true
-          indicators: true
+          indicators: false
           output: both
           thresholds: '50 75'
 
-      - name: Commit Coverage Report
-        if: ${{ github.event_name == 'push' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          git add code-coverage-results.md
-          git commit -m "Add coverage report"
-          git push
+      - name: Move Coverage Report to docs on main
+        if: github.ref == 'refs/heads/main'
+        run: mv coverage-summary.md docs/coverage/main.md
+
+      - name: Move Coverage Report to docs on develop
+        if: github.ref == 'refs/heads/develop'
+        run: mv coverage-summary.md docs/coverage/develop.md
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
