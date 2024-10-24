@@ -69,11 +69,11 @@ jobs:
 
       - name: Move Coverage Report to docs on main
         if: github.ref == 'refs/heads/main'
-        run: mv coverage-summary.md docs/coverage/main.md
+        run: mv code-coverage-results.md docs/coverage/main.md
 
       - name: Move Coverage Report to docs on develop
         if: github.ref == 'refs/heads/develop'
-        run: mv coverage-summary.md docs/coverage/develop.md
+        run: mv code-coverage-results.md docs/coverage/develop.md
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
