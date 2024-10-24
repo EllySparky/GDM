@@ -61,14 +61,12 @@ jobs:
         uses: emibcn/badge-action@v2.0.2
         with:
           label: Coverage ${{ github.ref == 'refs/heads/main' && 'main' || 'develop' }}
-          message: ${{ steps.extract_coverage.outputs.coverage }}
+          label-color: black
+          status: ${{ steps.extract_coverage.outputs.coverage }}
           color: ${{ steps.set_color.outputs.color }}
-          label_color: black
           style: flat
+          path: docs/coverage/${{ github.ref == 'refs/heads/main' && 'main.svg' || 'develop.svg' }}
         id: coverage_badge
-
-      - name: Move Coverage Badge to docs
-        run: v ${{ steps.coverage_badge.outputs.badge_path }} docs/coverage/${{ github.ref == 'refs/heads/main' && 'main.svg' || 'develop.svg' }}
 
   deploy:
     runs-on: ubuntu-latest
