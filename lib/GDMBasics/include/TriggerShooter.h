@@ -6,7 +6,7 @@
 #ifndef GDMATEEXAMPLES_TRIGGERSHOOTER_H
 #define GDMATEEXAMPLES_TRIGGERSHOOTER_H
 
-#include "GDMBasics.h"
+#include "Basics.h"
 
 namespace mate
 {

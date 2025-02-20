@@ -6,7 +6,7 @@
 #ifndef GDMATE_SPRITE_H
 #define GDMATE_SPRITE_H
 
-#include "GDMBasics.h"
+#include "Basics.h"
 #include <string>
 
 namespace mate

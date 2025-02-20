@@ -3,7 +3,7 @@
 //
 
 #include "Camera.h"
-#include "GDMBasics.h"
+#include "Basics.h"
 
 namespace mate
 {

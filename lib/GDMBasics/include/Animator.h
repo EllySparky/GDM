@@ -5,7 +5,8 @@
 #ifndef GDMATE_ANIMATOR_H
 #define GDMATE_ANIMATOR_H
 
-#include "GDMBasics.h"
+#include "Basics.h"
+#include <list>
 
 namespace mate {
     class Animator {
