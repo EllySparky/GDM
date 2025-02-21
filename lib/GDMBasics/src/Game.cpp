@@ -219,8 +219,6 @@ void Game::runSingleFrame()
 
     // Second targets windows events
 
-    _active_room->curateTriggers();
-
     // Todo: Data loop
     _active_room->loop();
 
