@@ -16,11 +16,12 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Install Linux Dependencies
-        run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
-
-      - name: Install gcovr
-        run: sudo apt-get install gcovr
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev \
+            libgl1-mesa-dev libegl1-mesa-dev gcovr
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,9 +31,6 @@ jobs:
 
       - name: Build All
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-
-      - name: Install Linux Dependencies
-        run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
 
       - name: Run Unit Tests
         working-directory: ${{github.workspace}}/build
@@ -77,5 +75,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/coverage/${{ github.ref == 'refs/heads/main' && 'main.svg' || 'develop.svg' }}
+          publish_dir: docs/coverage
           keep_files: true
