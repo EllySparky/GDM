@@ -7,6 +7,7 @@
 
 #include "Basics.h"
 #include <list>
+#include <functional>
 
 namespace mate {
     class Animator {
