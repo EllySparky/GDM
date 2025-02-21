@@ -1,6 +1,6 @@
-![Coverage on main](https://ellysparky.github.io/GDM/coverage/main.svg)
+![Coverage on main](https://ellysparky.github.io/GDM/main.svg)
 
-![Coverage on develop](https://ellysparky.github.io/GDM/coverage/develop.svg)
+![Coverage on develop](https://ellysparky.github.io/GDM/develop.svg)
 
 # Game Dev Mate
 

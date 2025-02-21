@@ -6,7 +6,7 @@
 #ifndef GDMATE_INPUTACTIONS_H
 #define GDMATE_INPUTACTIONS_H
 
-#include "GDMBasics.h"
+#include "Basics.h"
 #include <SFML/System.hpp>
 #include <functional>
 #include <iostream>

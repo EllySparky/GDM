@@ -1,7 +1,9 @@
 //
 // Created by elly_sparky on 01/08/24.
 //
-#include "GDMBasics.h"
+#include "Basics.h"
+#include "TriggerShooter.h"
+#include <cmath>
 
 namespace mate
 {

@@ -6,7 +6,7 @@
 #ifndef GDMATEEXAMPLES_CAMERA_H
 #define GDMATEEXAMPLES_CAMERA_H
 
-#include "GDMBasics.h"
+#include "Basics.h"
 #include "Sprite.h"
 
 namespace mate
