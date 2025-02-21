@@ -1,13 +1,41 @@
-//
-// Created by elly_sparky on 14/08/24.
-//
+/**
+ * @brief Trigger class methods definitions
+ * @file Trigger.cpp
+*/
+
 #include "Trigger.h"
 #include <cmath>
 
 namespace mate
 {
+	/**
+	 * Checks superposition between two rectangle shapes
+	 * @param rect1_pos position of the first rectangle's left top corner
+	 * @param rect1_dim scale of the first rectangle
+	 * @param rect2_pos position of the second rectangle's left top corner
+	 * @param rect2_dim scale of the second rectangle
+	 * @return true if superposed, false otherwise
+	 */
 	bool rectangleToRectangleCheck(sf::Vector2f rect1_pos, sf::Vector2f rect1_dim, sf::Vector2f rect2_pos, sf::Vector2f rect2_dim);
+
+	/**
+	 * Checks superposition between a rectangle shape and a circle shape
+	 * @param circ_pos center of the circle
+	 * @param circ_dim scale of the circle (only the biggest of it's two dimensions will be used)
+	 * @param rect_pos position of the rectangle's left top corner
+	 * @param rect_dim scale of the rectangle
+	 * @return true if superposed, false otherwise
+	 */
 	bool circleToRectangleCheck(sf::Vector2f circ_pos, sf::Vector2f circ_dim, sf::Vector2f rect_pos, sf::Vector2f rect_dim);
+
+	/**
+	 * Checks superposition between two circle shapes
+	 * @param circ1_pos center of the first circle
+	 * @param circ1_dim scale of the first circle (only the biggest dimension will be used)
+	 * @param circ2_pos center of the second circle
+	 * @param circ2_dim scale of the second circle (only the biggest dimension will be used)
+	 * @return true if superposed, false otherwise
+	 */
 	bool circleToCircleCheck(sf::Vector2f circ1_pos, sf::Vector2f circ1_dim, sf::Vector2f circ2_pos, sf::Vector2f circ2_dim);
 
 	std::list<std::weak_ptr<Trigger>> Trigger::active_triggers = {};
@@ -133,6 +161,7 @@ namespace mate
 	            switch (trigger_b->getShape())
 	            {
 	            case RECTANGLE:
+	            	// A is a circle, B is a rectangle
 	            	collide = circleToRectangleCheck(position_a, dimensions_a, position_b, dimensions_b);
 	                break;
 	            case CIRCLE:
@@ -181,7 +210,7 @@ namespace mate
 		short sign = std::signbit(distance_x);
 		// If distance_x is positive means circle is on the left, negative means it's on the right
 		// Checks if the circle is inside the rectangle using it's nearest horizontal sides
-		if ((circ_pos.x + ((distance_x >= 0) - (distance_x < 0)) * radius >= rect_pos.x + sign * rect_dim.x) != sign &&
+		if (circ_pos.x + ((distance_x >= 0) - (distance_x < 0)) * radius >= rect_pos.x + sign * rect_dim.x != sign &&
 			circ_pos.y <= rect_pos.y + rect_dim.y && circ_pos.y >= rect_pos.y)
 		{
 			return true;
@@ -191,14 +220,14 @@ namespace mate
 		sign = std::signbit(distance_y);
 		// If distance_y is positive means circle is above, negative means it's below
 		// Same as before but using the vertical sides
-		if ((circ_pos.y + ((distance_y >= 0) - (distance_y < 0)) * radius >= rect_pos.y + sign * rect_dim.y) != sign &&
+		if (circ_pos.y + ((distance_y >= 0) - (distance_y < 0)) * radius >= rect_pos.y + sign * rect_dim.y != sign &&
 			circ_pos.x <= rect_pos.x + rect_dim.x && circ_pos.x >= rect_pos.x)
 		{
 			return true;
 		}
 
 		// Finally checks if the nearest corner of the rectangle is inside the circle
-		//  (Which can happen even when both the previows conditions are false)
+		//  (Which can happen even when both the previous conditions are false)
 		// This is checked last to reduce the use of the sqrt function
 		distance_x += ((distance_x < 0) - (distance_x >= 0)) * rect_dim.x / 2;
 		distance_y += ((distance_y < 0) - (distance_y >= 0)) * rect_dim.y / 2;
