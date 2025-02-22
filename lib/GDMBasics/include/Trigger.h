@@ -127,6 +127,14 @@ namespace mate {
 		void renderLoop() override;
 	};
 
+	class EmptyTrigger : public Trigger
+	{
+	protected:
+		void fireTrigger(const std::shared_ptr<Trigger>& trigger_by) override {}
+	public:
+		explicit EmptyTrigger(const std::weak_ptr<Element> &parent) : Trigger(parent) {
+		}
+	};
 }
 
 #endif //TRIGGER_H
