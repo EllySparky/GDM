@@ -87,6 +87,13 @@ namespace mate
 		}
 	}
 
+	void Trigger::switchActive()
+	{
+		if (active) { unsubscribe(); }
+		else { subscribe(); }
+	}
+
+
 	void Trigger::loop()
 	{
 		if (active)

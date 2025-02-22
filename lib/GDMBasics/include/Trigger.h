@@ -117,6 +117,11 @@ namespace mate {
 		void subscribe();
 
 		/**
+		 * switch between active and inactive states.
+		 */
+		void switchActive();
+
+		/**
 		 * On loop Trigger runs checks with all other subscribed Triggers.
 		 */
 		void loop() override;
