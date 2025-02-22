@@ -70,6 +70,29 @@ class InputActions : public Component
     }
 
     /**
+     * Adds a new input to track, with the action being associated to an object's method that takes no arguments.
+     * @tparam ClassType Class of the object containing the method to call when the action is triggered.
+     * @param input sf::Keyboard::Key that triggers the action.
+     * @param func Method within the class of the object to call when the action is triggered.
+     * @param obj Reference to the specific instance that's going to be used when calling the method of the action.
+     */
+    template <typename ClassType>
+    void addInput(sf::Keyboard::Key input, void (ClassType::*func)(), std::shared_ptr<ClassType> obj) {
+        action_entry action;
+        action.key = input;
+        action.object_ref = obj;
+        std::weak_ptr<ClassType> w_obj = obj;
+        action.action = [w_obj, func]() -> void {
+            // Check if the object being referenced still exists
+            if (auto sharedObj = w_obj.lock())
+            {
+                (sharedObj.get()->*func)();
+            }
+        };
+        _actions.push_back(action);
+    }
+
+    /**
      * Adds a new input to track, with the action being associated to a global function.
      * @tparam Args Type of the arguments (if any) of the function that's going to be called by the action.
      * @param input sf::Keyboard::Key that triggers the action.
@@ -81,6 +104,20 @@ class InputActions : public Component
         action_entry action;
         action.key = input;
         action.action = [func, args...]() -> void { return (*func)(args...); };
+        action.object_ref = std::monostate{};
+        _actions.push_back(action);
+    }
+
+    /**
+     * Adds a new input to track, with the action being associated to a global function that takes no arguments.
+     * @param input sf::Keyboard::Key that triggers the action.
+     * @param func Function to call when the action is triggered.
+     */
+    void addInput(sf::Keyboard::Key input, void (*func)())
+    {
+        action_entry action;
+        action.key = input;
+        action.action = [func]() -> void { return (*func)(); };
         action.object_ref = std::monostate{};
         _actions.push_back(action);
     }
@@ -105,7 +142,7 @@ inline bool _isKeyPressedFunc(sf::Keyboard::Key key)
     return sf::Keyboard::isKeyPressed(key);
 }
 
-inline std::function<bool(sf::Keyboard::Key)> isKeyPressed = &_isKeyPressedFunc;
+inline std::function isKeyPressed = &_isKeyPressedFunc;
 
 } // namespace mate
 
