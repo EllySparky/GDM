@@ -13,5 +13,5 @@
 #include "Camera.h"
 #include "InputActions.h"
 #include "Sprite.h"
-#include "TriggerShooter.h"
+#include "Trigger.h"
 #endif // GDMATE_GDMBASICS_H

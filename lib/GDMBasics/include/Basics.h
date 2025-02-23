@@ -14,17 +14,6 @@ namespace mate
 {
 class Element;
 class Component;
-class Trigger;
-class TriggerShooter;
-class TriggerManager;
-
-/// Shapes supported for trigger detection
-enum ShapeType
-{
-    RECTANGLE ///< Calculated from the top left corner + height/width
-        ,
-    CIRCLE ///< Calculated from center + radius [max dimension]
-};
 
 /**
  * @brief sf::Sprite but with an additional depth value for better ordering
@@ -149,7 +138,7 @@ class ILowLoop : public IDestroy, public ILoop
  */
 template <class T>
 concept valid_component =
-    std::is_base_of<Component, T>::value && requires(std::weak_ptr<Element> element) { T{element}; };
+    std::is_base_of_v<Component, T> && requires(std::weak_ptr<Element> element) { T{element}; };
 
 /**
  * @brief Abstract class for the implementation of special Element functionalities.
@@ -157,7 +146,7 @@ concept valid_component =
 class Component : public ILowLoop
 {
   public:
-    explicit Component(std::weak_ptr<class LocalCoords> parent) : _parent(std::move(parent))
+    explicit Component(std::weak_ptr<LocalCoords> parent) : _parent(std::move(parent))
     {
     }
 
@@ -272,107 +261,6 @@ class Element : public mate::LocalCoords, public ILowLoop
 };
 
 /**
- * @brief Superposition detection.
- *
- * Trigger is an abstract class for superposition detection. Trigger implementations perform an specific action when
- * a TriggerShooter gets on top of them. Currently Trigger does not support for depth, but are expected to do so in the
- * near future.
- */
-class Trigger : public LocalCoords, public IDestroy
-{
-  private:
-    const int id;
-
-    static int generateId()
-    {
-        static int unique_id = 0;
-        return unique_id++;
-    }
-
-  public:
-    ShapeType shape = RECTANGLE; ///< Trigger Shape
-
-    Trigger() : id(generateId())
-    {
-    }
-    /**
-     * A Trigger can be set to follow an Element.
-     * @param follow Element to follow.
-     * @param must_follow Should the Trigger be destroy when the Element gets removed?
-     */
-    explicit Trigger(const std::shared_ptr<LocalCoords> &parent) : LocalCoords(parent), id(generateId())
-    {
-    }
-
-    [[nodiscard]] int getID() const
-    {
-        return id;
-    }
-
-    /**
-     * Abstract method. This method's implementations are called when a TriggerShooter gets inside the bounds of
-     * the Trigger instance.
-     */
-    virtual void triggerIn() = 0;
-};
-
-/**
- * @brief Trigger superposition calculations.
- *
- * TriggerManager keeps track of all active Triggers and performs the calculations for Trigger superposition when a
- * TriggerShooter requires it.
- */
-class TriggerManager
-{
-  private:
-    std::list<std::unique_ptr<Trigger>> triggers;
-
-  public:
-    void addTrigger(std::unique_ptr<Trigger> trig)
-    {
-        triggers.push_back(std::move(trig));
-    }
-
-    void removeTrigger(int trigger_id);
-
-    /**
-     * Removes all Triggers that are marked for removal.
-     */
-    void curateTriggers()
-    {
-        triggers.remove_if([](const std::unique_ptr<Trigger> &trigger) { return trigger->shouldDestroy(); });
-    }
-
-    /**
-     * Checks if the TriggerShooter is within any of the active Triggers.
-     */
-    virtual void checkTrigger(ShapeType shape, const TriggerShooter &shooter);
-    static bool rectangleToRectangleCheck(sf::Vector2f rect1_pos, sf::Vector2f rect1_dim, sf::Vector2f rect2_pos,
-                                          sf::Vector2f rect2_dim);
-    static bool circleToCircleCheck(sf::Vector2f circ1_pos, float circ1_rad, sf::Vector2f circ2_pos, float circ2_rad);
-    static bool circleToRectangleCheck(sf::Vector2f circ_pos, float radius, sf::Vector2f rect_pos,
-                                       sf::Vector2f rect_dim);
-
-#ifdef GDM_TESTING_ENABLED
-    uint getListCount()
-    {
-        return triggers.size();
-    }
-    bool triggerIsContained(int trigger_id)
-    {
-        for (auto &trigger : triggers)
-        {
-            if (trigger->getID() == trigger_id)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-#endif
-};
-
-/**
  * @brief Highest authority LocalCoords object.
  *
  * A Room works like a "folder" for all the Element objects on a Game, allowing for easy switching between radically
@@ -380,7 +268,7 @@ class TriggerManager
  * different levels, scenes or menu windows, so the Game object can switch between this by simply selecting a different
  * Room that already contains all the data of the Elements involved.
  */
-class Room : public mate::LocalCoords, public TriggerManager, public ILoop
+class Room : public mate::LocalCoords, public ILoop
 {
   private:
     std::list<std::shared_ptr<ILowLoop>> _children_loops; ///< Elements within the Room.
@@ -448,7 +336,7 @@ class Room : public mate::LocalCoords, public TriggerManager, public ILoop
  * Game contains all of the Room objects from the game, runs the loop() method of the active one, tracks the window(s)
  * and keeps the TriggerManager.
  */
-class Game : public TriggerManager
+class Game
 {
   private:
     std::list<std::shared_ptr<Room>> _rooms;
@@ -535,21 +423,6 @@ class Game : public TriggerManager
     [[maybe_unused]] std::shared_ptr<Room> getActiveRoom()
     {
         return _active_room;
-    }
-
-    // Trigger related stuff
-    void addRoomTrigger(std::unique_ptr<Trigger> trigger)
-    {
-        _active_room->addTrigger(std::move(trigger));
-    }
-    void removeRoomTrigger(int trigger_id)
-    {
-        _active_room->removeTrigger(trigger_id);
-    }
-    void checkTrigger(ShapeType shape, const TriggerShooter &shooter) override
-    {
-        TriggerManager::checkTrigger(shape, shooter);
-        _active_room->checkTrigger(shape, shooter);
     }
 
     // Longer methods declarations
