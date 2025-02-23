@@ -5,7 +5,7 @@ to collaborate with you. This document outlines the process to get started and t
 
 ## Getting Started
 
-1. **Fork the Repository**: Fork the GDM repository to your GitHub account by clicking the "Fork" button on the repository page.
+1. **Fork the Repository**: Fork the GDM repository's develop branch to your GitHub account by clicking the "Fork" button on the repository page.
 
 2. **Clone the Fork**: Clone your fork to your local machine using the following command:
     ```bash
