@@ -166,7 +166,7 @@ class Component : public ILowLoop
  * What's really important about Element objects is their capability to hold Component objects to clearly
  * differentiate between Element instances.
  */
-class Element : public mate::LocalCoords, public ILowLoop
+class Element : public LocalCoords, public ILowLoop
 {
   private:
     std::list<std::shared_ptr<ILowLoop>> _children;
