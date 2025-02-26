@@ -4,11 +4,12 @@
  * @file Basics.h
  */
 
-#include "LocalCoords.h"
-#include <list>
 
 #ifndef GDMBUILDALL_BASICS_H
 #define GDMBUILDALL_BASICS_H
+
+#include "LocalCoords.h"
+#include <list>
 
 namespace mate
 {
@@ -41,7 +42,6 @@ struct ord_sprite
  */
 struct render_target
 {
-    // Todo: Use an sf::RenderTarget instead of an sf::RenderWindow
     // The target contains the dimensions of the window where the  sprites will be printed
     std::unique_ptr<sf::RenderWindow> target{};
     const u_int id;
