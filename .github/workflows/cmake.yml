@@ -77,3 +77,33 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: docs/coverage
           keep_files: true
+  release:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare library archive
+        run: |
+          mkdir -p GDMBasics
+          cp -r lib/GDMBasics/{include,src,CMakeLists.txt} GDMBasics/
+          zip -r GDMBasics.zip GDMBasics
+
+      - name: Read version from CMakeLists.txt
+        id: version
+        run: |
+          VERSION=$(grep -oP 'VERSION \K[0-9]+\.[0-9]+\.[0-9]+' lib/GDMBasics/CMakeLists.txt)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSION }}
+          draft: false
+          prerelease: true
+          files: GDMBasics.zip
