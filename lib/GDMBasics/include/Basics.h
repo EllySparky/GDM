@@ -64,6 +64,8 @@ class IDestroy
     bool _destroy_flag = false;
 
   public:
+    virtual ~IDestroy() = default;
+
     /**
      * When IDestroy is set for destruction the effect is not immediate, this is to avoid the destruction to occur
      * while a code thread is being executed (Like a sef-destruction case). shouldDestroy()
