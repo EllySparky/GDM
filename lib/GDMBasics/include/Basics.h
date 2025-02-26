@@ -347,7 +347,6 @@ class Game
     std::shared_ptr<Room> _active_room;
     render_target _main_render_target;
     std::list<render_target> _secondary_targets;
-    static std::shared_ptr<Game> _instance;
 
     /**
      * Private constructor. Generates the window.
@@ -356,7 +355,9 @@ class Game
     {
         _main_render_target.target = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 400), "Game");
         _active_room = nullptr;
-    };
+    }
+
+    static std::shared_ptr<Game> getInstance();
 
   public:
     Game(Game &other) = delete;

@@ -6,7 +6,12 @@
 
 namespace mate
 {
-std::shared_ptr<Game> Game::_instance = nullptr;
+
+std::shared_ptr<Game> Game::getInstance()
+{
+    static std::shared_ptr<Game> _game_instance{ new Game };
+    return _game_instance;
+}
 
 void Game::setWindowView(const sf::View& view_, const u_int id_) const
 {
@@ -93,21 +98,15 @@ void Game::setWindowSize(const int x, const int y, const uint id_) const
 
 std::shared_ptr<Game> Game::getGame()
 {
-    if (!_instance)
-    {
-        _instance = std::shared_ptr<Game>(new Game());
-        _instance->addRoom(std::move(std::make_shared<Room>()));
-    }
+    auto _instance = getInstance();
+    _instance->addRoom(std::move(std::make_shared<Room>()));
     return _instance;
 }
 
 std::shared_ptr<Game> Game::getGame(const int win_width_, const int win_height_, const std::string &game_name_,
                                     std::shared_ptr<Room> main_room_)
 {
-    if (!_instance)
-    {
-        _instance = std::shared_ptr<Game>(new Game());
-    }
+    auto _instance = getInstance();
     _instance->_main_render_target.target->setSize(sf::Vector2u(win_width_, win_height_));
     _instance->_main_render_target.target->setTitle(game_name_);
     _instance->_rooms.push_back(main_room_);
@@ -118,10 +117,8 @@ std::shared_ptr<Game> Game::getGame(const int win_width_, const int win_height_,
 [[maybe_unused]] std::shared_ptr<Game> Game::getGame(const int win_width_, const int win_height_, const std::string &game_name_,
                                                      std::list<std::shared_ptr<Room>> &rooms_list_)
 {
-    if (!_instance)
-    {
-        _instance = std::shared_ptr<Game>(new Game());
-    }
+
+    auto _instance = getInstance();
     _instance->_main_render_target.target->setSize(sf::Vector2u(win_width_, win_height_));
     _instance->_main_render_target.target->setTitle(game_name_);
     _instance->_rooms.merge(rooms_list_);
