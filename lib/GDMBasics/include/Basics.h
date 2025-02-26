@@ -459,7 +459,6 @@ class Game
 
     // Others
 
-    // Todo: Switch rooms by using a unique ID given by the room itself.
     /**
      * Switch the active room
      * @param position_ of the desired room on the game rooms list
