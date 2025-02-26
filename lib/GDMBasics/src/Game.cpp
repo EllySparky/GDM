@@ -193,7 +193,6 @@ void Game::runSingleFrame() const
     }
     for (const auto &target : _secondary_targets)
     {
-        sf::Event event{};
         while (target.target->pollEvent(event))
         {
             switch (event.type)
