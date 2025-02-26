@@ -177,22 +177,22 @@ class Element : public LocalCoords, public ILowLoop
     {
     }
 
-    explicit Element(const std::shared_ptr<LocalCoords> &parent, sf::Vector2f position) : LocalCoords(position, parent)
+    explicit Element(const std::shared_ptr<LocalCoords> &parent, const sf::Vector2f position) : LocalCoords(position, parent)
     {
     }
 
-    explicit Element(const std::shared_ptr<LocalCoords> &parent, sf::Vector2f position, float rotation)
+    explicit Element(const std::shared_ptr<LocalCoords> &parent, const sf::Vector2f position, const float rotation)
         : LocalCoords(position, rotation, parent)
     {
     }
 
-    explicit Element(const std::shared_ptr<LocalCoords> &parent, sf::Vector2f position, sf::Vector2f scale)
+    explicit Element(const std::shared_ptr<LocalCoords> &parent, const sf::Vector2f position, const sf::Vector2f scale)
         : LocalCoords(position, scale, parent)
     {
     }
 
-    explicit Element(const std::shared_ptr<LocalCoords> &parent, sf::Vector2f position, sf::Vector2f scale,
-                     float rotation)
+    explicit Element(const std::shared_ptr<LocalCoords> &parent, const sf::Vector2f position, const sf::Vector2f scale,
+                     const float rotation)
         : LocalCoords(position, scale, rotation, parent)
     {
     }
@@ -261,7 +261,7 @@ class Element : public LocalCoords, public ILowLoop
     /**
      * @return All the related Element under it's authority (children + children's children + etc).
      */
-    [[maybe_unused]] unsigned long getFullElementsCount();
+    [[maybe_unused]] unsigned long getFullElementsCount() const;
 };
 
 /**
