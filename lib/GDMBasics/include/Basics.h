@@ -102,6 +102,8 @@ class IDestroy
 class ILoop
 {
   public:
+    virtual ~ILoop() = default;
+
     /**
      * @brief Main loop method.
      *
