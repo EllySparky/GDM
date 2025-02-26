@@ -8,14 +8,12 @@ project(
 
 include(FetchContent)
 
-# Descargar SFML usando FetchContent
+# Get SFML
 FetchContent_Declare(
         SFML
         GIT_REPOSITORY https://github.com/SFML/SFML.git
-        GIT_TAG 2.6.1  # Puedes cambiar esto a la versión que prefieras
+        GIT_TAG 2.6.1
 )
-
-# Hacer el fetch de SFML
 FetchContent_MakeAvailable(SFML)
 
 set(CMAKE_CXX_STANDARD 20)
