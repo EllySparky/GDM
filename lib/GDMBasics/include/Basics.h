@@ -272,7 +272,7 @@ class Element : public LocalCoords, public ILowLoop
  * different levels, scenes or menu windows, so the Game object can switch between this by simply selecting a different
  * Room that already contains all the data of the Elements involved.
  */
-class Room : public mate::LocalCoords, public ILoop
+class Room : public LocalCoords, public ILoop
 {
   private:
     std::list<std::shared_ptr<ILowLoop>> _children_loops; ///< Elements within the Room.
