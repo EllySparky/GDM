@@ -365,7 +365,7 @@ class Game
     // Simple methods
 
     // Window related stuff
-    void setWindowView(sf::View view_, u_int id_) const;
+    void setWindowView(const sf::View& view_, u_int id_) const;
     /**
      * Sets the main window's view to the default view.
      */
@@ -375,7 +375,7 @@ class Game
     }
 
 #ifdef GDM_TESTING_ENABLED
-    [[nodiscard]] sf::View getView(u_int id_) const
+    [[nodiscard]] sf::View getView(const u_int id_) const
     {
         if (id_ == 0)
         {
@@ -401,7 +401,7 @@ class Game
      * Prints a sprite on a selected render target (window).
      * @param id_ id value of the render_target to be used.
      */
-    void draw(const std::shared_ptr<const ord_sprite> &sprite_, u_int id_);
+    void draw(const std::shared_ptr<const ord_sprite> &sprite_, u_int id_) const;
 
     // Render Targets related stuff
     /**
@@ -409,7 +409,7 @@ class Game
      * @param view_ sf::View of the new window.
      * @return id value of the new window.
      */
-    [[nodiscard]] u_int addSecondaryTarget(sf::View view_, const std::string &title);
+    [[nodiscard]] u_int addSecondaryTarget(const sf::View& view_, const std::string &title);
 
     // Rooms related stuff
     [[maybe_unused]] void addRoom(std::shared_ptr<Room> room)
@@ -469,9 +469,9 @@ class Game
     /**
      * Main game loop
      */
-    [[noreturn]] void gameLoop();
+    [[noreturn]] void gameLoop() const;
 
-    void runSingleFrame();
+    void runSingleFrame() const;
 };
 
 using game_instance = std::shared_ptr<Game>;
