@@ -282,7 +282,7 @@ class Room : public LocalCoords, public ILoop
     Room() = default;
 
 #ifdef GDM_TESTING_ENABLED
-    template <class T> unsigned long getLoopTypeCount()
+    template <class T> unsigned long getLoopTypeCount() const
     {
         ulong count = 0;
         for (const auto &loop : _children_loops)
