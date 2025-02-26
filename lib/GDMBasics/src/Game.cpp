@@ -99,7 +99,7 @@ void Game::setWindowSize(const int x, const int y, const uint id_) const
 std::shared_ptr<Game> Game::getGame()
 {
     auto _instance = getInstance();
-    _instance->addRoom(std::move(std::make_shared<Room>()));
+    _instance->addRoom(std::make_shared<Room>());
     return _instance;
 }
 
