@@ -147,7 +147,7 @@ void Game::draw(const std::shared_ptr<const ord_sprite> &sprite_, const u_int id
 u_int Game::addSecondaryTarget(const sf::View& view_, const std::string &title)
 {
     render_target new_target;
-    u_int id = new_target.id;
+    const u_int id = new_target.id;
     new_target.target = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 400), title);
     new_target.target->setView(view_);
     _secondary_targets.push_back(std::move(new_target));
