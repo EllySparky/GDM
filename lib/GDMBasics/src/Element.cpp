@@ -86,7 +86,7 @@ unsigned long Element::getElementsCount() const
     return count;
 }
 
-unsigned long Element::getFullElementsCount()
+unsigned long Element::getFullElementsCount() const
 {
     unsigned long count = 0;
     for (const auto &child : _children)

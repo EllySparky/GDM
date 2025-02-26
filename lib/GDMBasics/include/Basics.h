@@ -4,11 +4,12 @@
  * @file Basics.h
  */
 
-#include "LocalCoords.h"
-#include <list>
 
 #ifndef GDMBUILDALL_BASICS_H
 #define GDMBUILDALL_BASICS_H
+
+#include "LocalCoords.h"
+#include <list>
 
 namespace mate
 {
@@ -41,7 +42,6 @@ struct ord_sprite
  */
 struct render_target
 {
-    // Todo: Use an sf::RenderTarget instead of an sf::RenderWindow
     // The target contains the dimensions of the window where the  sprites will be printed
     std::unique_ptr<sf::RenderWindow> target{};
     const u_int id;
@@ -64,6 +64,8 @@ class IDestroy
     bool _destroy_flag = false;
 
   public:
+    virtual ~IDestroy() = default;
+
     /**
      * When IDestroy is set for destruction the effect is not immediate, this is to avoid the destruction to occur
      * while a code thread is being executed (Like a sef-destruction case). shouldDestroy()
@@ -100,6 +102,8 @@ class IDestroy
 class ILoop
 {
   public:
+    virtual ~ILoop() = default;
+
     /**
      * @brief Main loop method.
      *
@@ -162,7 +166,7 @@ class Component : public ILowLoop
  * What's really important about Element objects is their capability to hold Component objects to clearly
  * differentiate between Element instances.
  */
-class Element : public mate::LocalCoords, public ILowLoop
+class Element : public LocalCoords, public ILowLoop
 {
   private:
     std::list<std::shared_ptr<ILowLoop>> _children;
@@ -173,22 +177,22 @@ class Element : public mate::LocalCoords, public ILowLoop
     {
     }
 
-    explicit Element(const std::shared_ptr<LocalCoords> &parent, sf::Vector2f position) : LocalCoords(position, parent)
+    explicit Element(const std::shared_ptr<LocalCoords> &parent, const sf::Vector2f position) : LocalCoords(position, parent)
     {
     }
 
-    explicit Element(const std::shared_ptr<LocalCoords> &parent, sf::Vector2f position, float rotation)
+    explicit Element(const std::shared_ptr<LocalCoords> &parent, const sf::Vector2f position, const float rotation)
         : LocalCoords(position, rotation, parent)
     {
     }
 
-    explicit Element(const std::shared_ptr<LocalCoords> &parent, sf::Vector2f position, sf::Vector2f scale)
+    explicit Element(const std::shared_ptr<LocalCoords> &parent, const sf::Vector2f position, const sf::Vector2f scale)
         : LocalCoords(position, scale, parent)
     {
     }
 
-    explicit Element(const std::shared_ptr<LocalCoords> &parent, sf::Vector2f position, sf::Vector2f scale,
-                     float rotation)
+    explicit Element(const std::shared_ptr<LocalCoords> &parent, const sf::Vector2f position, const sf::Vector2f scale,
+                     const float rotation)
         : LocalCoords(position, scale, rotation, parent)
     {
     }
@@ -257,7 +261,7 @@ class Element : public mate::LocalCoords, public ILowLoop
     /**
      * @return All the related Element under it's authority (children + children's children + etc).
      */
-    [[maybe_unused]] unsigned long getFullElementsCount();
+    [[maybe_unused]] unsigned long getFullElementsCount() const;
 };
 
 /**
@@ -268,7 +272,7 @@ class Element : public mate::LocalCoords, public ILowLoop
  * different levels, scenes or menu windows, so the Game object can switch between this by simply selecting a different
  * Room that already contains all the data of the Elements involved.
  */
-class Room : public mate::LocalCoords, public ILoop
+class Room : public LocalCoords, public ILoop
 {
   private:
     std::list<std::shared_ptr<ILowLoop>> _children_loops; ///< Elements within the Room.
@@ -278,7 +282,7 @@ class Room : public mate::LocalCoords, public ILoop
     Room() = default;
 
 #ifdef GDM_TESTING_ENABLED
-    template <class T> unsigned long getLoopTypeCount()
+    template <class T> unsigned long getLoopTypeCount() const
     {
         ulong count = 0;
         for (const auto &loop : _children_loops)
@@ -343,7 +347,6 @@ class Game
     std::shared_ptr<Room> _active_room;
     render_target _main_render_target;
     std::list<render_target> _secondary_targets;
-    static std::shared_ptr<Game> _instance;
 
     /**
      * Private constructor. Generates the window.
@@ -352,7 +355,9 @@ class Game
     {
         _main_render_target.target = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 400), "Game");
         _active_room = nullptr;
-    };
+    }
+
+    static std::shared_ptr<Game> getInstance();
 
   public:
     Game(Game &other) = delete;
@@ -361,7 +366,7 @@ class Game
     // Simple methods
 
     // Window related stuff
-    void setWindowView(sf::View view_, u_int id_) const;
+    void setWindowView(const sf::View& view_, u_int id_) const;
     /**
      * Sets the main window's view to the default view.
      */
@@ -371,7 +376,7 @@ class Game
     }
 
 #ifdef GDM_TESTING_ENABLED
-    [[nodiscard]] sf::View getView(u_int id_) const
+    [[nodiscard]] sf::View getView(const u_int id_) const
     {
         if (id_ == 0)
         {
@@ -397,7 +402,7 @@ class Game
      * Prints a sprite on a selected render target (window).
      * @param id_ id value of the render_target to be used.
      */
-    void draw(const std::shared_ptr<const ord_sprite> &sprite_, u_int id_);
+    void draw(const std::shared_ptr<const ord_sprite> &sprite_, u_int id_) const;
 
     // Render Targets related stuff
     /**
@@ -405,7 +410,7 @@ class Game
      * @param view_ sf::View of the new window.
      * @return id value of the new window.
      */
-    [[nodiscard]] u_int addSecondaryTarget(sf::View view_, const std::string &title);
+    [[nodiscard]] u_int addSecondaryTarget(const sf::View& view_, const std::string &title);
 
     // Rooms related stuff
     [[maybe_unused]] void addRoom(std::shared_ptr<Room> room)
@@ -455,7 +460,6 @@ class Game
 
     // Others
 
-    // Todo: Switch rooms by using a unique ID given by the room itself.
     /**
      * Switch the active room
      * @param position_ of the desired room on the game rooms list
@@ -465,9 +469,9 @@ class Game
     /**
      * Main game loop
      */
-    [[noreturn]] void gameLoop();
+    [[noreturn]] void gameLoop() const;
 
-    void runSingleFrame();
+    void runSingleFrame() const;
 };
 
 using game_instance = std::shared_ptr<Game>;

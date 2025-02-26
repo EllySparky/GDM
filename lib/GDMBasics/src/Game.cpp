@@ -6,9 +6,14 @@
 
 namespace mate
 {
-std::shared_ptr<Game> Game::_instance = nullptr;
 
-void Game::setWindowView(sf::View view_, u_int id_) const
+std::shared_ptr<Game> Game::getInstance()
+{
+    static std::shared_ptr<Game> _game_instance{ new Game };
+    return _game_instance;
+}
+
+void Game::setWindowView(const sf::View& view_, const u_int id_) const
 {
     if (id_ == 0)
     {
@@ -25,7 +30,7 @@ void Game::setWindowView(sf::View view_, u_int id_) const
     }
 }
 
-sf::Vector2i Game::getWindowPosition(uint id_) const
+sf::Vector2i Game::getWindowPosition(const uint id_) const
 {
     if (id_ == 0)
     {
@@ -41,7 +46,7 @@ sf::Vector2i Game::getWindowPosition(uint id_) const
     return {0, 0};
 }
 
-void Game::setWindowPosition(int x, int y, uint id_) const
+void Game::setWindowPosition(const int x, const int y, const uint id_) const
 {
     if (id_ == 0)
     {
@@ -58,7 +63,7 @@ void Game::setWindowPosition(int x, int y, uint id_) const
     }
 }
 
-sf::Vector2u Game::getWindowSize(uint id_) const
+sf::Vector2u Game::getWindowSize(const uint id_) const
 {
     if (id_ == 0)
     {
@@ -74,7 +79,7 @@ sf::Vector2u Game::getWindowSize(uint id_) const
     return {0, 0};
 }
 
-void Game::setWindowSize(int x, int y, uint id_) const
+void Game::setWindowSize(const int x, const int y, const uint id_) const
 {
     if (id_ == 0)
     {
@@ -93,25 +98,15 @@ void Game::setWindowSize(int x, int y, uint id_) const
 
 std::shared_ptr<Game> Game::getGame()
 {
-    // std::lock_guard<std::mutex> lock(mutex); //Uncomment when I start working with threads, maybe
-
-    if (!_instance)
-    {
-        _instance = std::shared_ptr<Game>(new Game());
-        // Todo: set default values for screen size and game name
-        _instance->addRoom(std::move(std::make_shared<Room>()));
-    }
+    auto _instance = getInstance();
+    _instance->addRoom(std::make_shared<Room>());
     return _instance;
 }
 
-std::shared_ptr<Game> Game::getGame(int win_width_, int win_height_, const std::string &game_name_,
+std::shared_ptr<Game> Game::getGame(const int win_width_, const int win_height_, const std::string &game_name_,
                                     std::shared_ptr<Room> main_room_)
 {
-    // std::lock_guard<std::mutex> lock(mutex); //Uncomment when I start working with threads, maybe
-    if (!_instance)
-    {
-        _instance = std::shared_ptr<Game>(new Game());
-    }
+    auto _instance = getInstance();
     _instance->_main_render_target.target->setSize(sf::Vector2u(win_width_, win_height_));
     _instance->_main_render_target.target->setTitle(game_name_);
     _instance->_rooms.push_back(main_room_);
@@ -119,14 +114,11 @@ std::shared_ptr<Game> Game::getGame(int win_width_, int win_height_, const std::
     return _instance;
 }
 
-[[maybe_unused]] std::shared_ptr<Game> Game::getGame(int win_width_, int win_height_, const std::string &game_name_,
+[[maybe_unused]] std::shared_ptr<Game> Game::getGame(const int win_width_, const int win_height_, const std::string &game_name_,
                                                      std::list<std::shared_ptr<Room>> &rooms_list_)
 {
-    // std::lock_guard<std::mutex> lock(mutex); //Uncomment when I start working with threads, maybe
-    if (!_instance)
-    {
-        _instance = std::shared_ptr<Game>(new Game());
-    }
+
+    auto _instance = getInstance();
     _instance->_main_render_target.target->setSize(sf::Vector2u(win_width_, win_height_));
     _instance->_main_render_target.target->setTitle(game_name_);
     _instance->_rooms.merge(rooms_list_);
@@ -137,7 +129,7 @@ std::shared_ptr<Game> Game::getGame(int win_width_, int win_height_, const std::
     return _instance;
 }
 
-void Game::draw(const std::shared_ptr<const ord_sprite> &sprite_, u_int id_)
+void Game::draw(const std::shared_ptr<const ord_sprite> &sprite_, const u_int id_) const
 {
     if (id_ == 0)
     {
@@ -152,17 +144,17 @@ void Game::draw(const std::shared_ptr<const ord_sprite> &sprite_, u_int id_)
     }
 }
 
-u_int Game::addSecondaryTarget(sf::View view_, const std::string &title)
+u_int Game::addSecondaryTarget(const sf::View& view_, const std::string &title)
 {
     render_target new_target;
-    u_int id = new_target.id;
+    const u_int id = new_target.id;
     new_target.target = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 400), title);
     new_target.target->setView(view_);
     _secondary_targets.push_back(std::move(new_target));
     return id;
 }
 
-[[maybe_unused]] void Game::switchRoom(int position_)
+[[maybe_unused]] void Game::switchRoom(const int position_)
 {
     if (position_ < _rooms.size())
     {
@@ -172,7 +164,7 @@ u_int Game::addSecondaryTarget(sf::View view_, const std::string &title)
     }
 }
 
-[[noreturn]] void Game::gameLoop()
+[[noreturn]] void Game::gameLoop() const
 {
     _main_render_target.target->setFramerateLimit(60);
     do
@@ -182,7 +174,7 @@ u_int Game::addSecondaryTarget(sf::View view_, const std::string &title)
     exit(0);
 }
 
-void Game::runSingleFrame()
+void Game::runSingleFrame() const
 {
     // Event Pooling
     sf::Event event{};
@@ -201,7 +193,6 @@ void Game::runSingleFrame()
     }
     for (const auto &target : _secondary_targets)
     {
-        sf::Event event{};
         while (target.target->pollEvent(event))
         {
             switch (event.type)
@@ -217,12 +208,8 @@ void Game::runSingleFrame()
         }
     }
 
-    // Second targets windows events
-
-    // Todo: Data loop
     _active_room->loop();
 
-    // Todo: Render Loop
     _main_render_target.target->clear();
     for (const auto &target : _secondary_targets)
     {
